@@ -13,7 +13,8 @@
 class Kohana_Bootstrap {
 
     public static function add_class(array $attributes, $class) {
-        return Arr::get($attributes, "class", "") . " " . $class;
+        $attributes["class"] = Arr::get($attributes, "class", "") . " " . $class;
+        return $attributes;
     }
 
     /**
@@ -27,7 +28,7 @@ class Kohana_Bootstrap {
      */
     public static function alert($message, $type = "error", array $attributes = array()) {
 
-        $attributes["class"] = Arr::get($attributes, "class", "") . " alert alert-$type";
+        $attributes = static::add_class($attributes, "alert alert-$type");
 
         return "<div " . HTML::attributes($attributes) . ">" . $message . "</div>";
     }
@@ -38,7 +39,10 @@ class Kohana_Bootstrap {
      * @param type $type
      * @return type
      */
-    public static function badge($message, $type = "") {
+    public static function badge($message, $type = "", $attributes = array()) {
+
+        $attributes = static::add_class($attributes, "badge badge-$type");
+
         return "<span class='badge badge-$type'>" . $message . "</span>";
     }
 
@@ -91,6 +95,20 @@ class Kohana_Bootstrap {
         return "<button " . HTML::attributes($attributes) . ">" . $text . "</button>";
     }
 
+    public static function carousel(array $elements, $actives = NULL, array $attributes = array()) {
+
+        if ($actives === NULL) {
+            $actives = array();
+        }
+
+        if (!Arr::is_array($actives)) {
+            $actives = array($actives);
+        }
+
+        $attributes = static::add_class($attributes, "carousel slide");
+        return View::factory("bootstrap/carousel", array("elements" => $elements, "actives" => $actives, "attributes" => $attributes));
+    }
+
     /**
      * Generates a Bootstrap close button.
      * 
@@ -130,7 +148,7 @@ class Kohana_Bootstrap {
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
-        $output .= "<a class='btn btn-$type dropdown-toggle' data-toggle='dropdown'>$title<span class = 'caret'></span></a>";
+        $output .= static::button("$title<span class = 'caret'></span>", NULL, NULL, array("dropdown-toggle", "data-toggle" => "dropdown"));
 
         $output .= static::dropdown($elements);
 
@@ -149,6 +167,14 @@ class Kohana_Bootstrap {
      * @return string
      */
     public static function dropdown(array $elements, $actives = NULL, array $attributes = array()) {
+
+        if ($actives === NULL) {
+            $actives = array();
+        }
+
+        if (!Arr::is_array($actives)) {
+            $actives = array($actives);
+        }
 
         $attributes = static::add_class($attributes, "dropdown-menu");
 
@@ -298,10 +324,6 @@ class Kohana_Bootstrap {
      */
     public static function pagination(array $links, $actives = NULL, array $attributes = array()) {
 
-        $attributes = static::add_class($attributes, "pagination");
-
-        $output = "<div " . HTML::attributes($attributes) . "><ul>";
-
         if ($actives === NULL) {
             $actives = array();
         }
@@ -309,6 +331,10 @@ class Kohana_Bootstrap {
         if (!Arr::is_array($actives)) {
             $actives = array($actives);
         }
+
+        $attributes = static::add_class($attributes, "pagination");
+
+        $output = "<div " . HTML::attributes($attributes) . "><ul>";
 
         foreach ($links as $key => $value) {
             $output .= "<li " . HTML::attributes(array("class" => (in_array($key, $actives) ? "active" : ""))) . ">";
