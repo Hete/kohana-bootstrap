@@ -9,6 +9,7 @@ defined('SYSPATH') or die('No direct access allowed.');
  * @category Test
  * @author Guillaume Poirier-Morency <guillaumepoiriermorency@gmail.com>
  * @copyright (c) 2012, Hète.ca Inc.
+ * @license http://kohanaframework.org/license
  */
 class Bootstrap_Test extends Unittest_TestCase {
 

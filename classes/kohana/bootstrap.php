@@ -10,9 +10,12 @@ defined('SYSPATH') or die('No direct access allowed.');
  * @package Bootstrap
  * @category Helpers
  * @author Hète.ca Team
- * @copyright (c) 2012, Hète.ca
+ * @copyright (c) 2012, Hète.ca Inc.
+ * @license http://kohanaframework.org/license
  */
 class Kohana_Bootstrap {
+
+    const CARET = '<span class="caret"></span>';
 
     /**
      * Append an attributes such as a class without overriding
@@ -398,11 +401,17 @@ class Kohana_Bootstrap {
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
+        $atts = array("class" => "bar");
+
         // Support for multiple progress bars
         if (Arr::is_array($progress)) {
             foreach ($progress as $p) {
-                $output .= "<div class='bar' style='width:$p%' />";
+                $atts["style"] = "width: $p%;";
+                $output .= "<div " . HTML::attributes($atts) . " />";
             }
+        } else {
+            $atts["style"] = "width: $progress%;";
+            $output .= "<div " . HTML::attributes($atts) . " />";
         }
 
         $output .= "</div>";
@@ -433,7 +442,9 @@ class Kohana_Bootstrap {
         $output .= static::button(array_shift($elements), NULL, NULL, $type);
 
         // Dropdown button in this case has no title, just a caret
-        $output .= static::dropdown_button("", $elements);
+        $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
+
+        $output .= static::dropdown($elements);
 
         $output .= "</div>";
 

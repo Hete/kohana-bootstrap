@@ -7,6 +7,8 @@ defined('SYSPATH') or die('No direct access allowed.');
     <head>
         <title>Tests for Kohana Bootstrap module</title>
         <?php echo HTML::style("asset/css/bootstrap.min.css") ?>
+        <?php echo HTML::script("asset/js/jquery.min.js") ?>
+
         <?php echo HTML::script("asset/js/bootstrap.min.js") ?>
     </head>
     <body>
@@ -70,7 +72,7 @@ defined('SYSPATH') or die('No direct access allowed.');
 
         <section id="nav_list">
             <h2>Navigation list</h2>
-            <?php echo Bootstrap::nav_list(array("Foo", "bar")) ?>
+            <?php echo Bootstrap::nav_list(array("#nav_list" => "Foo", "#nav_list" => "bar")) ?>
         </section>
 
         <section id="nav_pills">
