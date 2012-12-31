@@ -1,3 +1,4 @@
+<?php defined('SYSPATH') or die('No direct access allowed.'); ?>
 <div <?php echo HTML::attributes($attributes) ?>>
     <!-- Carousel items -->
     <div class="carousel-inner">
