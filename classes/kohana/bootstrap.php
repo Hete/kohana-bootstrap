@@ -168,35 +168,6 @@ class Kohana_Bootstrap {
     }
 
     /**
-     * 
-     * @see http://twitter.github.com/bootstrap/components.html#buttonDropdowns
-     * 
-     * @param type $title title for the dropdown button.
-     * @param array $elements elements to include in the dropdown button
-     * @param array $type 
-     * @param array $attributes custom attributes for the button group.
-     * @return type String renders the HTML Code to create the button
-     */
-    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array()) {
-
-        if (count($elements) === 1) {
-            return static::button($elements[0], NULL, NULL, $type);
-        }
-
-        static::add_attribute($attributes, "btn-group");
-
-        $output = "<div " . HTML::attributes($attributes) . ">";
-
-        $output .= static::button("$title<span class = 'caret'></span>", NULL, NULL, $type, array("dropdown-toggle", "data-toggle" => "dropdown"));
-
-        $output .= static::dropdown($elements, $actives);
-
-        $output .= "</div>";
-
-        return $output;
-    }
-
-    /**
      * Generates a basic dropdown menu.
      * 
      * @see http://twitter.github.com/bootstrap/components.html#dropdowns
@@ -232,6 +203,35 @@ class Kohana_Bootstrap {
         }
 
         $output .= "<ul></div>";
+
+        return $output;
+    }
+
+    /**
+     * 
+     * @see http://twitter.github.com/bootstrap/components.html#buttonDropdowns
+     * 
+     * @param type $title title for the dropdown button.
+     * @param array $elements elements to include in the dropdown button
+     * @param array $type 
+     * @param array $attributes custom attributes for the button group.
+     * @return type String renders the HTML Code to create the button
+     */
+    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array()) {
+
+        if (count($elements) === 1) {
+            return static::button($elements[0], NULL, NULL, $type);
+        }
+
+        static::add_attribute($attributes, "btn-group");
+
+        $output = "<div " . HTML::attributes($attributes) . ">";
+
+        $output .= static::button("$title<span class = 'caret'></span>", NULL, NULL, $type, array("dropdown-toggle", "data-toggle" => "dropdown"));
+
+        $output .= static::dropdown($elements, $actives);
+
+        $output .= "</div>";
 
         return $output;
     }
@@ -313,55 +313,55 @@ class Kohana_Bootstrap {
 
     /**
      * 
-     * @param array $links array of uri => name 
+     * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
      * @param array $attributes
      * @return type
      */
-    public static function nav_list(array $links, $actives = NULL, $attributes = array()) {
+    public static function nav_list(array $elements, $actives = NULL, $attributes = array()) {
 
         static::add_attribute($attributes, "nav-list");
 
-        return static::navs($links, $actives, $attributes);
+        return static::navs($elements, $actives, $attributes);
     }
 
     /**
      * 
-     * @param array $links array of uri => name 
+     * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
      * @param array $attributes
      * @return type
      */
-    public static function nav_pills(array $links, $actives = NULL, $attributes = array()) {
+    public static function nav_pills(array $elements, $actives = NULL, $attributes = array()) {
 
         static::add_attribute($attributes, "nav-pills");
 
-        return static::navs($links, $actives, $attributes);
+        return static::navs($elements, $actives, $attributes);
     }
 
     /**
      * 
-     * @param array $links array of uri => name 
+     * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
      * @param array $attributes
      * @return type
      */
-    public static function nav_tabs(array $links, $actives = NULL, $attributes = array()) {
+    public static function nav_tabs(array $elements, $actives = NULL, $attributes = array()) {
 
         static::add_attribute($attributes, "nav-tabs");
 
-        return static::navs($links, $actives, $attributes);
+        return static::navs($elements, $actives, $attributes);
     }
 
     /**
      * Generate a bootstrap pagination given links.
-     * @param array $links
+     * @param array $elements
      * @param array|string $active can be an active key from $links or an array of active
      * keys.
      * @param array $attributes attributs css appliqué au div.
      * @return string
      */
-    public static function pagination(array $links, $actives = NULL, array $attributes = array()) {
+    public static function pagination(array $elements, $actives = NULL, array $attributes = array()) {
 
         if ($actives === NULL) {
             $actives = array();
@@ -375,7 +375,7 @@ class Kohana_Bootstrap {
 
         $output = "<div " . HTML::attributes($attributes) . "><ul>";
 
-        foreach ($links as $key => $value) {
+        foreach ($elements as $key => $value) {
             $output .= "<li " . HTML::attributes(array("class" => (in_array($key, $actives) ? "active" : ""))) . ">";
             $output .= static::list_item($key, $value);
             $output .= "</li>";
