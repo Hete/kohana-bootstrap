@@ -205,7 +205,7 @@ class Kohana_Bootstrap {
             }
         }
 
-        $output .= "<ul></div>";
+        $output .= "<ul>";
 
         return $output;
     }
@@ -230,7 +230,7 @@ class Kohana_Bootstrap {
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
-        $output .= static::button("$title<span class = 'caret'></span>", NULL, NULL, $type, array("dropdown-toggle", "data-toggle" => "dropdown"));
+        $output .= static::button($title . " " . static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
 
         $output .= static::dropdown($elements, $actives);
 
