@@ -120,12 +120,12 @@ class Kohana_Bootstrap {
 
         $tag = NULL;
 
-        if ($name === NULL && $value !== NULL) {
+        if ($name !== NULL && $value !== NULL) {
             $tag = "button";
         } else if ($value !== NULL) {
             // It's a link button
             $tag = "a";
-            $attributes["href"] = $value;
+            $attributes["href"] = URL::site($value);
         } else {
             // It's a simple div button, specified upper
             $tag = "div";
@@ -171,7 +171,8 @@ class Kohana_Bootstrap {
     }
 
     /**
-     * Generates a basic dropdown menu.
+     * Generates a basic dropdown menu. This function supports recursivity for
+     * sub-menues.
      * 
      * @see http://twitter.github.com/bootstrap/components.html#dropdowns
      * 
@@ -198,8 +199,8 @@ class Kohana_Bootstrap {
 
             if (Arr::is_array($element)) {
                 // Creating submenu
-                $atts = static::add_class($atts, "dropdown-submenu");
-                $output .= "<li " . HTML::attributes($atts) . ">" . static::dropdown($elements, $attributes) . "></li>";
+                static::add_attribute($atts, "dropdown-submenu");
+                $output .= "<li " . HTML::attributes($atts) . ">" . static::dropdown($elements, $actives, $attributes) . "></li>";
             } else {
                 $output .= "<li " . HTML::attributes($atts) . ">" . static::list_item($key, $element) . "</li>";
             }
@@ -226,7 +227,7 @@ class Kohana_Bootstrap {
             return static::button($elements[0], NULL, NULL, $type);
         }
 
-        static::add_attribute($attributes, "btn-group");
+        static::add_attribute($attributes, "");
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
