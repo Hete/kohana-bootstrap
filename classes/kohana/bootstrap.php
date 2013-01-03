@@ -24,7 +24,7 @@ class Kohana_Bootstrap {
      * @param type $value value to append
      * @param type $name name of the attribute
      */
-    public static function add_attribute(array &$attributes, $value, $name = "class") {
+    public static function add_attribute(&$attributes, $value, $name = "class") {
         $attributes[$name] = Arr::get($attributes, $name, "") . " " . $value;
     }
 
@@ -266,7 +266,7 @@ class Kohana_Bootstrap {
      * @param array $attributes attributs du modal.     
      * @return string
      */
-    public static function modal($title, $description, $save = NULL, $close = NULL, array $attributes = array()) {
+    public static function modal($title, $description, $save = NULL, $close = NULL, $attributes = array()) {
 
         static::add_attribute($attributes, "modal hide fade");
 
