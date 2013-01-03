@@ -317,6 +317,37 @@ class Kohana_Bootstrap {
 
     /**
      * 
+     * @param type $brand
+     * @param array $elements
+     * @param type $actives
+     * @param type $attributes
+     * @return string
+     */
+    public static function navbar($brand, array $elements, $actives = NULL, $attributes = array()) {
+        
+        static::add_attribute($attributes, "navbar");
+        
+        $output = "<div " . HTML::attributes($attributes) . ">";
+
+
+        $output .= "<div " . HTML::attributes(array("class" => "navbar-inner")) . ">";
+        
+
+        if ($brand !== NULL) {
+            $output .= "<div " . HTML::attributes(array("class" => "brand")) . ">" . $brand . "</div>";
+        }
+
+        $output .= static::navs($elements, $actives);
+        
+        $output .= "</div>";
+        
+        $output .= "</div>";
+
+        return $output;
+    }
+
+    /**
+     * 
      * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
      * @param array $attributes
