@@ -221,17 +221,20 @@ class Kohana_Bootstrap {
      * @param array $attributes custom attributes for the button group.
      * @return type String renders the HTML Code to create the button
      */
-    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array()) {
+    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array(), array $button_attributes = array()) {
 
         if (count($elements) === 1) {
             return static::button($elements[0], NULL, NULL, $type);
         }
 
-        static::add_attribute($attributes, "");
+        static::add_attribute($attributes, "btn-group");
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
-        $output .= static::button($title . " " . static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
+        static::add_attribute($button_attributes, "dropdown-toggle");
+        $button_attributes["data-toggle"] = "dropdown";
+
+        $output .= static::button($title . " " . static::CARET, NULL, NULL, $type, $button_attributes);
 
         $output .= static::dropdown($elements, $actives);
 
