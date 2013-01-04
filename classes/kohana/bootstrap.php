@@ -119,8 +119,8 @@ class Kohana_Bootstrap {
         $attributes["value"] = $value;
 
         $tag = NULL;
-        
-        if ($name === NULL && $value !== NULL) {
+
+        if ($name === NULL && is_string($value)) {
             // It's a link button
             $tag = "a";
             $attributes["href"] = URL::site($value);
@@ -472,7 +472,11 @@ class Kohana_Bootstrap {
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
-        $output .= static::button(array_shift($elements), NULL, NULL, $type);
+        // First element can be a link
+        $keys = array_keys($elements);
+        $value = array_shift($elements); // Pop!
+
+        $output .= static::button($value, NULL, $keys[0], $type);
 
         // Dropdown button in this case has no title, just a caret
         $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
