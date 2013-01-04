@@ -119,16 +119,14 @@ class Kohana_Bootstrap {
         $attributes["value"] = $value;
 
         $tag = NULL;
-
-        if ($name !== NULL && $value !== NULL) {
-            $tag = "button";
-        } else if ($value !== NULL) {
+        
+        if ($name === NULL && $value !== NULL) {
             // It's a link button
             $tag = "a";
             $attributes["href"] = URL::site($value);
         } else {
             // It's a simple div button, specified upper
-            $tag = "div";
+            $tag = "button";
         }
 
         return "<$tag " . HTML::attributes($attributes) . ">" . $text . "</$tag>";
@@ -327,23 +325,23 @@ class Kohana_Bootstrap {
      * @return string
      */
     public static function navbar($brand, array $elements, $actives = NULL, $attributes = array()) {
-        
+
         static::add_attribute($attributes, "navbar");
-        
+
         $output = "<div " . HTML::attributes($attributes) . ">";
 
 
         $output .= "<div " . HTML::attributes(array("class" => "navbar-inner")) . ">";
-        
+
 
         if ($brand !== NULL) {
             $output .= "<div " . HTML::attributes(array("class" => "brand")) . ">" . $brand . "</div>";
         }
 
         $output .= static::navs($elements, $actives);
-        
+
         $output .= "</div>";
-        
+
         $output .= "</div>";
 
         return $output;
