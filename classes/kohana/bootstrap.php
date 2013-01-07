@@ -464,8 +464,9 @@ class Kohana_Bootstrap {
     public static function split_button(array $elements, $type = "", array $attributes = array()) {
 
         // If only one element is specified, we draw a simple button
+
         if (count($elements) === 1) {
-            return static::button($elements[0], NULL, NULL, $type, $attributes);
+            return static::button(array_shift($elements), NULL, NULL, $type, $attributes);
         }
 
         static::add_attribute($attributes, "btn-group");
@@ -476,7 +477,7 @@ class Kohana_Bootstrap {
         $keys = array_keys($elements);
         $value = array_shift($elements); // Pop!
 
-        $output .= static::button($value, NULL, $keys[0], $type);
+        $output .= static::button($value, NULL, $value, $type);
 
         // Dropdown button in this case has no title, just a caret
         $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
