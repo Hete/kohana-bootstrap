@@ -477,7 +477,7 @@ class Kohana_Bootstrap {
         $keys = array_keys($elements);
         $value = array_shift($elements); // Pop!
 
-        $output .= static::button($value, NULL, $value, $type);
+        $output .= static::button($value, NULL, $keys[0], $type);
 
         // Dropdown button in this case has no title, just a caret
         $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
