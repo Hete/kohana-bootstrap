@@ -1,14 +1,13 @@
 <?php
 defined('SYSPATH') or die('No direct access allowed.');
 
-// Draw every element from the module
+// Draw every element from the module to test them
 ?>
 <html>
     <head>
         <title>Tests for Kohana Bootstrap module</title>
         <?php echo HTML::style("asset/css/bootstrap.min.css") ?>
         <?php echo HTML::script("asset/js/jquery.min.js") ?>
-
         <?php echo HTML::script("asset/js/bootstrap.min.js") ?>
     </head>
     <body>

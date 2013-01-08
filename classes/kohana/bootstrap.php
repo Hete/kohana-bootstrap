@@ -5,6 +5,9 @@ defined('SYSPATH') or die('No direct access allowed.');
 /**
  * Helper class for Bootstrap.
  * 
+ * This is designed as generic as possible. Inputs are safed against XSS and
+ * other security breaches on Kohana layer.
+ * 
  * @see http://twitter.github.com/bootstrap/
  * 
  * @package Bootstrap
@@ -15,10 +18,14 @@ defined('SYSPATH') or die('No direct access allowed.');
  */
 class Kohana_Bootstrap {
 
+    /**
+     * Simple caret!
+     */
     const CARET = '<span class="caret"></span>';
 
     /**
-     * Append an attributes such as a class without overriding
+     * Append an attributes without overriding existing attributes. class is
+     * used by default.
      * 
      * @param array $attributes array of key-value pairs of attributes
      * @param type $value value to append
@@ -29,6 +36,7 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates a Bootstrap alert.
      * 
      * @see 
      * 
@@ -47,12 +55,12 @@ class Kohana_Bootstrap {
     /**
      * Generates a Bootstrap badge.
      * 
-     * @see
+     * @see 
      * 
-     * @param type $message
+     * @param string $message
      * @param string $type
      * @param array $attributes
-     * @return type
+     * @return string
      */
     public static function badge($message, $type = "", $attributes = array()) {
 
@@ -100,9 +108,8 @@ class Kohana_Bootstrap {
     /**
      * Generate a Bootstrap button.
      * 
-     * Basically, it makes a simple div button. If a $name and a $value is 
-     * specified, it assumes the button is a form button and if only the value
-     * is specified, it will be a link button with $value in href attribute.
+     * Basically, it makes a simple button. However, if only a string $value is
+     * specified ($name being NULL), it will make an anchor button.
      * 
      * @param string $text text to show
      * @param string $name name in a form
@@ -118,20 +125,28 @@ class Kohana_Bootstrap {
         $attributes["name"] = $name;
         $attributes["value"] = $value;
 
-        $tag = NULL;
+        $tag = "button";
 
         if ($name === NULL && is_string($value)) {
             // It's a link button
             $tag = "a";
             $attributes["href"] = URL::site($value);
-        } else {
-            // It's a simple div button, specified upper
-            $tag = "button";
         }
 
         return "<$tag " . HTML::attributes($attributes) . ">" . $text . "</$tag>";
     }
 
+    /**
+     * Generates a Bootstrap carousel slideshow.
+     * 
+     * @see
+     * 
+     * @param string $id is the id to identify the carousel.
+     * @param array $elements are the elements shown in the carousel.
+     * @param array|string $actives are the active elements.
+     * @param array $attributes 
+     * @return View
+     */
     public static function carousel($id, array $elements, $actives = NULL, array $attributes = array()) {
 
         if ($actives === NULL) {
@@ -172,6 +187,12 @@ class Kohana_Bootstrap {
      * Generates a basic dropdown menu. This function supports recursivity for
      * sub-menues.
      * 
+     * For sub-menues, the key will be the text shown and the value has to be
+     * a valid $elements array for recursivity. There is no convenient way to
+     * make clickable parent menus. (However, if you have suggestions, go on!)
+     * 
+     * @todo clickable menus with child
+     * 
      * @see http://twitter.github.com/bootstrap/components.html#dropdowns
      * 
      * @param array $elements elements to include in the dropdown.
@@ -198,7 +219,7 @@ class Kohana_Bootstrap {
             if (Arr::is_array($element)) {
                 // Creating submenu
                 static::add_attribute($atts, "dropdown-submenu");
-                $output .= "<li " . HTML::attributes($atts) . ">" . static::dropdown($elements, $actives, $attributes) . "></li>";
+                $output .= "<li " . HTML::attributes($atts) . ">" . $key . static::dropdown($elements, $actives, $attributes) . "</li>";
             } else {
                 $output .= "<li " . HTML::attributes($atts) . ">" . static::list_item($key, $element) . "</li>";
             }
@@ -210,6 +231,7 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates a Bootstrap dropdown button.
      * 
      * @see http://twitter.github.com/bootstrap/components.html#buttonDropdowns
      * 
@@ -219,10 +241,18 @@ class Kohana_Bootstrap {
      * @param array $attributes custom attributes for the button group.
      * @return type String renders the HTML Code to create the button
      */
-    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array(), array $button_attributes = array()) {
+    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array(), array $button_attributes = array(), array $dropdown_attributes = array()) {
 
+        // With zero elements, we return nothing
+        if (count($elements) === 0) {
+            return "";
+        }
+
+        // If only one element is specified, we draw a simple button
         if (count($elements) === 1) {
-            return static::button($elements[0], NULL, NULL, $type);
+            // First element can be a link
+            $keys = array_keys($elements);
+            return static::button(array_shift($elements), NULL, Arr::get($keys, 0), $type, $attributes);
         }
 
         static::add_attribute($attributes, "btn-group");
@@ -234,13 +264,20 @@ class Kohana_Bootstrap {
 
         $output .= static::button($title . " " . static::CARET, NULL, NULL, $type, $button_attributes);
 
-        $output .= static::dropdown($elements, $actives);
+        $output .= static::dropdown($elements, $actives, $dropdown_attributes);
 
         $output .= "</div>";
 
         return $output;
     }
 
+    /**
+     * Utility to parse values specified in $elements parameter in the module.
+     * 
+     * @param type $key
+     * @param type $value
+     * @return type
+     */
     public static function list_item($key, $value) {
         if (is_numeric($key)) {
             return $value;
@@ -249,6 +286,16 @@ class Kohana_Bootstrap {
         }
     }
 
+    /**
+     * Generates a Bootstrap label.
+     * 
+     * @see 
+     * 
+     * @param type $message
+     * @param type $type
+     * @param array $attributes
+     * @return type
+     */
     public static function label($message, $type = "", array $attributes = array()) {
 
         static::add_attribute($attributes, "label label-$type");
@@ -257,15 +304,16 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates a Bootstrap modal.
      * 
      * @see http://twitter.github.com/bootstrap/javascript.html#modals
      * 
      * @param type $title
-     * @param type $description
+     * @param type $description 
      * @param type $save save button
      * @param type $cancel cancel button
      * @param array $attributes attributs du modal.     
-     * @return string
+     * @return View
      */
     public static function modal($title, $description, $save = NULL, $close = NULL, $attributes = array()) {
 
@@ -283,6 +331,7 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates basic navs.
      * 
      * @see http://twitter.github.com/bootstrap/components.html#navs
      * 
@@ -317,6 +366,9 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates a navigation bar.
+     * 
+     * @see
      * 
      * @param type $brand
      * @param array $elements
@@ -324,21 +376,19 @@ class Kohana_Bootstrap {
      * @param type $attributes
      * @return string
      */
-    public static function navbar($brand, array $elements, $actives = NULL, $attributes = array()) {
+    public static function navbar($brand, array $elements, $actives = NULL, $attributes = array(), $nav_attributes = array()) {
 
         static::add_attribute($attributes, "navbar");
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
-
         $output .= "<div " . HTML::attributes(array("class" => "navbar-inner")) . ">";
-
 
         if ($brand !== NULL) {
             $output .= "<div " . HTML::attributes(array("class" => "brand")) . ">" . $brand . "</div>";
         }
 
-        $output .= static::navs($elements, $actives);
+        $output .= static::navs($elements, $actives, $nav_attributes);
 
         $output .= "</div>";
 
@@ -348,6 +398,9 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates a Bootstrap navigation list.
+     * 
+     * @see 
      * 
      * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
@@ -362,6 +415,9 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates Bootstrap navigation pills.
+     * 
+     * @see
      * 
      * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
@@ -376,6 +432,9 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Generates Bootstrap navigation tabs.
+     * 
+     * @see
      * 
      * @param array $elements array of uri => name 
      * @param array|string $actives active tabs
@@ -391,6 +450,9 @@ class Kohana_Bootstrap {
 
     /**
      * Generate a bootstrap pagination given links.
+     * 
+     * @see
+     * 
      * @param array $elements
      * @param array|string $active can be an active key from $links or an array of active
      * keys.
@@ -424,6 +486,9 @@ class Kohana_Bootstrap {
 
     /**
      * Generates a Bootstrap progress bar.
+     * 
+     * @see
+     * 
      * @param type $message
      * @param type $type
      * @return type
@@ -453,15 +518,17 @@ class Kohana_Bootstrap {
     }
 
     /**
-     * Créé un split button.
+     * Generates a Bootstrap split button.
      * 
      * @see http://twitter.github.com/bootstrap/components.html#buttonSplitbutton
+     * 
+     * @todo support for active elements in dropdown
      * 
      * @param array $elements liste des éléments à disposer dans le split button.
      * @param string $type
      * @return string
      */
-    public static function split_button(array $elements, $type = "", array $attributes = array()) {
+    public static function split_button(array $elements, $type = "", array $attributes = array(), array $button_attributes = array(), array $dropdown_attributes = array()) {
 
         if (count($elements) === 0) {
             return "";
@@ -482,12 +549,12 @@ class Kohana_Bootstrap {
         // First element can be a link
         $keys = array_keys($elements);
 
-        $output .= static::button(array_shift($elements), NULL, Arr::get($keys, 0), $type);
+        $output .= static::button(array_shift($elements), NULL, Arr::get($keys, 0), $type, $button_attributes);
 
         // Dropdown button in this case has no title, just a caret
         $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
 
-        $output .= static::dropdown($elements);
+        $output .= static::dropdown($elements, NULL, $dropdown_attributes);
 
         $output .= "</div>";
 
