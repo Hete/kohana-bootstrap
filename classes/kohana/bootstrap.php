@@ -17,10 +17,10 @@ defined('SYSPATH') or die('No direct access allowed.');
  * @license http://kohanaframework.org/license
  */
 class Kohana_Bootstrap {
-
     /**
      * Simple caret!
      */
+
     const CARET = '<span class="caret"></span>';
 
     /**
@@ -196,7 +196,8 @@ class Kohana_Bootstrap {
      * @see http://twitter.github.com/bootstrap/components.html#dropdowns
      * 
      * @param array $elements elements to include in the dropdown.
-     * @param array $attributes attributes for the dropdown
+     * @param variant $actives actives elements.
+     * @param array $attributes attributes for the dropdown.
      * @return string
      */
     public static function dropdown(array $elements, $actives = NULL, array $attributes = array()) {
@@ -211,7 +212,10 @@ class Kohana_Bootstrap {
 
         static::add_attribute($attributes, "dropdown-menu");
 
+        $output = "";
+
         $output = "<ul " . HTML::attributes($attributes) . ">";
+
 
         foreach ($elements as $key => $element) {
             $atts = array("class" => (in_array($key, $actives) ? "active" : ""));
@@ -219,13 +223,14 @@ class Kohana_Bootstrap {
             if (Arr::is_array($element)) {
                 // Creating submenu
                 static::add_attribute($atts, "dropdown-submenu");
-                $output .= "<li " . HTML::attributes($atts) . ">" . $key . static::dropdown($elements, $actives, $attributes) . "</li>";
+                $output .= "<li " . HTML::attributes($atts) . ">" . $key . static::dropdown($element, NULL, $attributes, TRUE) . "</li>";
             } else {
                 $output .= "<li " . HTML::attributes($atts) . ">" . static::list_item($key, $element) . "</li>";
             }
         }
 
-        $output .= "<ul>";
+
+        $output .= "</ul>";
 
         return $output;
     }
