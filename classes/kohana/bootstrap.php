@@ -23,6 +23,13 @@ class Kohana_Bootstrap {
 
     const CARET = '<span class="caret"></span>';
 
+    public static $types = array(
+        "success",
+        "info",
+        "warning",
+        "error"
+    );
+
     /**
      * Append an attributes without overriding existing attributes. class is
      * used by default.
