@@ -244,7 +244,7 @@ class Kohana_Bootstrap {
      * @param array $elements elements to include in the dropdown button
      * @param array $type 
      * @param array $attributes custom attributes for the button group.
-     * @return type String renders the HTML Code to create the button
+     * @return string rendered HTML Code to create the button
      */
     public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = array(), array $button_attributes = array(), array $dropdown_attributes = array()) {
 
@@ -277,11 +277,27 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Glyphicon generator.
+     * 
+     * @see http://twitter.github.com/bootstrap/base-css.html#icons
+     * 
+     * @param string $name is the icon name without the "icon-" prefix.
+     * @param array $attributes are any extra attributes to add to the i tag.
+     * @return string html code for the icon.
+     */
+    public static function icon($name, array $attributes = NULL) {
+
+        static::add_attribute($attributes, "icon-$name");
+
+        return "<i " . HTML::attributes($attributes) . "></i>";
+    }
+
+    /**
      * Utility to parse values specified in $elements parameter in the module.
      * 
-     * @param type $key
-     * @param type $value
-     * @return type
+     * @param variant $key
+     * @param variant $value
+     * @return variant
      */
     public static function list_item($key, $value) {
         if (is_numeric($key)) {
