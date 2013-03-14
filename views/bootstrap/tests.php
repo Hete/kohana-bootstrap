@@ -103,6 +103,11 @@ defined('SYSPATH') or die('No direct access allowed.');
             <h2>Split button</h2>
             <?php echo Bootstrap::split_button(array("Foo", "bar", "is")) ?>
         </section>
+        
+        <section id="well">
+            <h2>Well</h2>
+            <?php echo Bootstrap::well("LOL", "small") ?>
+        </section>
 
     </body>
 </html>

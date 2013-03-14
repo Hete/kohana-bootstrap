@@ -623,6 +623,25 @@ class Kohana_Bootstrap {
         return $output;
     }
 
+    /**
+     * Bootstrap well implementation.
+     * 
+     * @see http://twitter.github.com/bootstrap/components.html#misc
+     * 
+     * @param string $message is the content to be presented in a well.
+     * @param string $size is the size which could be small or large.
+     * @param array $attributes is an array of extra attributes to apply on the
+     * well.
+     * @return string
+     */
+    public static function well($message, $size = "", array $attributes = NULL) {
+
+        static::add_attribute($attributes, "well");
+        static::add_attribute($attributes, "well-$size");
+
+        return "<div " . HTML::attributes($attributes) . ">" . $message . "</div>";
+    }
+
 }
 
 ?>

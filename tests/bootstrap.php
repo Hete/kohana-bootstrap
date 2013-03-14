@@ -88,6 +88,10 @@ class Bootstrap_Test extends Unittest_TestCase {
     public function test_split_button() {
         Bootstrap::split_button(array());
     }
+    
+    public function test_well() {
+        Bootstrap::well("Foo", "small");
+    }
 
 }
 
