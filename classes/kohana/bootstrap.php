@@ -454,9 +454,42 @@ class Kohana_Bootstrap {
     }
 
     /**
+     * Media object implementation. Does not support media listing.
+     * 
+     * @see http://twitter.github.com/bootstrap/components.html#media
+     * 
+     * @param string $href link to the presented media object.
+     * @param string $object your object must have the media-object class.
+     * @param string $body is the content. It is suggested to add a title (h1, 
+     * h2, h3, ...) having the media-heading class such as 
+     * 
+     * <h4 class="media-heading">Here your title</h4>
+     * <p>Dispose your content like you want</p>
+     * 
+     * @param array $attributes attributes to apply on media div.
+     * @return string
+     */
+    public static function media($href, $object, $body, array $attributes = NULL) {
+
+        static::add_attribute($attributes, "media");
+
+        $output = "<div " . HTML::attributes($attributes) . ">";
+
+        // Adding media object within an anchor
+        $output .= HTML::anchor($href, $object, array("class" => "pull-left"));
+
+        // Adding media body
+        $output .= "<div " . HTML::attributes(array("class" => "media-body")) . ">" . $body . "</div>";
+
+        $output .= "</div>";
+
+        return $output;
+    }
+
+    /**
      * Generate a bootstrap pagination given links.
      * 
-     * @see
+     * @see http://twitter.github.com/bootstrap/components.html#pagination
      * 
      * @param array $elements
      * @param array|string $active can be an active key from $links or an array of active
@@ -492,11 +525,12 @@ class Kohana_Bootstrap {
     /**
      * Generates a Bootstrap progress bar.
      * 
-     * @see
+     * @see http://twitter.github.com/bootstrap/components.html#progress
      * 
-     * @param type $message
-     * @param type $type
-     * @return type
+     * @param string $message
+     * @param string $type
+     * @param array $attributes
+     * @return string
      */
     public static function progress($progress, $type = "", array $attributes = array()) {
 

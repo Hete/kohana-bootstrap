@@ -59,6 +59,11 @@ defined('SYSPATH') or die('No direct access allowed.');
             <?php echo Bootstrap::label("Foo") ?>
         </section>
 
+        <section id="media">
+            <h2>Media</h2>
+            <?php echo Bootstrap::media("#", HTML::image("lol", array("class" => "media-object")), "sure!") ?>
+        </section>
+
         <section id="modal">
             <h2>Modal</h2>
             <?php echo Bootstrap::modal("Foo", "Beautiful bar") ?>

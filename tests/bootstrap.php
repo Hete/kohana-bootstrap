@@ -53,6 +53,10 @@ class Bootstrap_Test extends Unittest_TestCase {
         Bootstrap::label("test", "", array());
     }
 
+    public function test_media() {
+        Bootstrap::media("test", "to", "cool stuff");
+    }
+
     public function test_modal() {
         Bootstrap::modal("Bar", "Foo");
     }
