@@ -336,21 +336,25 @@ class Kohana_Bootstrap {
      * 
      * @see http://twitter.github.com/bootstrap/javascript.html#modals
      * 
-     * @param type $title
-     * @param type $description 
-     * @param type $save save button
-     * @param type $cancel cancel button
+     * @param string $id is an unique id to identify the modal and trigger it.
+     * @param type $title is the title of the modal.
+     * @param type $description is the description of the modal.
+     * @param string $action is the form action, if appliable.
+     * @param type $save save button.
+     * @param type $cancel cancel button.
      * @param array $attributes attributs du modal.     
+     * @param array $parameters are the parameters passed to the view.
      * @return View
      */
-    public static function modal($title, $description, $save = NULL, $close = NULL, $attributes = array()) {
+    public static function modal($id, $title, $description, $action = NULL, $save = NULL, $close = NULL, $attributes = NULL, $parameters = NULL) {
 
         static::add_attribute($attributes, "modal hide fade");
 
-        $parameters = array();
+        $attributes["id"] = "$id";
 
         $parameters["title"] = $title;
         $parameters["description"] = $description;
+        $parameters["action"] = $action;
         $parameters["save"] = $save;
         $parameters["close"] = $close;
         $parameters["attributes"] = $attributes;
