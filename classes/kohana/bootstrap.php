@@ -157,7 +157,14 @@ class Kohana_Bootstrap {
     public static function carousel($id, array $elements, $actives = NULL, array $attributes = array()) {
 
         if ($actives === NULL) {
+
             $actives = array();
+
+            // Le premier élément est actif
+            if (Valid::not_empty($elements)) {
+                $keys = array_keys($elements);
+                $actives[] = array_shift($keys);
+            }
         }
 
         if (!Arr::is_array($actives)) {
