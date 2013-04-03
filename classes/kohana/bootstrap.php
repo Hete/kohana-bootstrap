@@ -135,9 +135,8 @@ class Kohana_Bootstrap {
         $tag = "button";
 
         if ($name === NULL && is_string($value)) {
-            // It's a link button
-            $tag = "a";
-            $attributes["href"] = URL::site($value);
+            // It's a link button        
+            return HTML::anchor($value, $text, $attributes);
         }
 
         return "<$tag " . HTML::attributes($attributes) . ">" . $text . "</$tag>";
