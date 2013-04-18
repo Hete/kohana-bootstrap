@@ -3,7 +3,7 @@
     <!-- Carousel items -->
     <div class="carousel-inner">
         <?php foreach ($elements as $key => $element) : ?>
-            <div <?php echo HTML::attributes(array("class" => "item" . (in_array($key, $actives) ? "active" : ""))); ?>>
+            <div <?php echo HTML::attributes(array("class" => "item " . (in_array($key, $actives) ? "active" : ""))); ?>>
                 <?php echo $element ?>
             </div>
         <?php endforeach; ?>
