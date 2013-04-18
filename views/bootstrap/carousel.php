@@ -9,6 +9,8 @@
         <?php endforeach; ?>
     </div>
     <!-- Carousel nav -->
-    <a class="carousel-control left" href="#<?php echo $attributes["id"] ?>" data-slide="prev">&lsaquo;</a>
-    <a class="carousel-control right" href="#<?php echo $attributes["id"] ?>" data-slide="next">&rsaquo;</a>
+    <?php if (count($elements) > 1): ?>
+        <a class="carousel-control left" href="#<?php echo $attributes["id"] ?>" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#<?php echo $attributes["id"] ?>" data-slide="next">&rsaquo;</a>
+    <?php endif; ?>
 </div>
