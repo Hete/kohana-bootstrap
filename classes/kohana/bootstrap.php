@@ -93,12 +93,12 @@ class Kohana_Bootstrap {
 
         $count = 0;
 
-        foreach ($elements as $key => $value) {
+        foreach ($elements as $value) {
             $count++;
 
             $output .= "<li>";
 
-            $output .= static::list_item($key, $value);
+            $output .= $value;
 
             // Check if we add a divider
             if ($count < count($elements)) {
@@ -238,10 +238,9 @@ class Kohana_Bootstrap {
                 static::add_attribute($atts, "dropdown-submenu");
                 $output .= "<li " . HTML::attributes($atts) . ">" . $key . static::dropdown($element, NULL, $attributes, TRUE) . "</li>";
             } else {
-                $output .= "<li " . HTML::attributes($atts) . ">" . static::list_item($key, $element) . "</li>";
+                $output .= "<li " . HTML::attributes($atts) . ">$element</li>";
             }
         }
-
 
         $output .= "</ul>";
 
@@ -304,22 +303,7 @@ class Kohana_Bootstrap {
 
         return "<i " . HTML::attributes($attributes) . "></i>";
     }
-
-    /**
-     * Utility to parse values specified in $elements parameter in the module.
-     * 
-     * @param variant $key
-     * @param variant $value
-     * @return variant
-     */
-    public static function list_item($key, $value) {
-        if (is_numeric($key)) {
-            return $value;
-        } else {
-            return HTML::anchor($key, $value);
-        }
-    }
-
+    
     /**
      * Generates a Bootstrap label.
      * 
@@ -392,9 +376,9 @@ class Kohana_Bootstrap {
 
         $output = "<ul " . HTML::attributes($attributes) . ">";
 
-        foreach ($elements as $uri => $text) {
-            $output .= "<li " . HTML::attributes(array("class" => in_array($uri, $actives) ? "active" : "")) . " >";
-            $output .= static::list_item($uri, $text);
+        foreach ($elements as $key => $element) {
+            $output .= "<li " . HTML::attributes(array("class" => in_array($key, $actives) ? "active" : "")) . " >";
+            $output .= $element;
             $output .= "</li>";
         }
 
@@ -491,7 +475,6 @@ class Kohana_Bootstrap {
      * 
      * @see http://twitter.github.com/bootstrap/components.html#media
      * 
-     * @param string $href link to the presented media object.
      * @param string $object your object must have the media-object class.
      * @param string $body is the content. It is suggested to add a title (h1, 
      * h2, h3, ...) having the media-heading class such as 
@@ -502,14 +485,14 @@ class Kohana_Bootstrap {
      * @param array $attributes attributes to apply on media div.
      * @return string
      */
-    public static function media($href, $object, $body, array $attributes = NULL) {
+    public static function media($object, $body, array $attributes = NULL) {
 
         static::add_attribute($attributes, "media");
 
         $output = "<div " . HTML::attributes($attributes) . ">";
 
         // Adding media object within an anchor
-        $output .= HTML::anchor($href, $object, array("class" => "pull-left"));
+        $output .= "<div " . HTML::attributes(array("class" => "pull-left media-object")) . ">$object</div>";
 
         // Adding media body
         $output .= "<div " . HTML::attributes(array("class" => "media-body")) . ">" . $body . "</div>";
@@ -546,7 +529,7 @@ class Kohana_Bootstrap {
 
         foreach ($elements as $key => $value) {
             $output .= "<li " . HTML::attributes(array("class" => (in_array($key, $actives) ? "active" : ""))) . ">";
-            $output .= static::list_item($key, $value);
+            $output .= $value;
             $output .= "</li>";
         }
 
