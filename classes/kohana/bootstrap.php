@@ -610,9 +610,7 @@ class Kohana_Bootstrap {
         // If only one element is specified, we draw a simple button
 
         if (count($elements) === 1) {
-            // First element can be a link
-            $keys = array_keys($elements);
-            return static::button(array_shift($elements), NULL, Arr::get($keys, 0), $type, $attributes);
+            return array_shift($elements);
         }
 
         static::add_attribute($attributes, "btn-group");
@@ -622,7 +620,7 @@ class Kohana_Bootstrap {
         // First element can be a link
         $keys = array_keys($elements);
 
-        $output .= static::button(array_shift($elements), NULL, Arr::get($keys, 0), $type, $button_attributes);
+        $output .= array_shift($elements);
 
         // Dropdown button in this case has no title, just a caret
         $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
