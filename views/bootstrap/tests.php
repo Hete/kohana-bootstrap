@@ -42,24 +42,24 @@
     <?php echo Bootstrap::dropdown_button("Foo", array("foo")) ?>
 </section>
 
+<section id="icon">
+    <h2>Label</h2>
+    <?php echo Bootstrap::icon('add') ?>
+</section>
+
 <section id="label">
     <h2>Label</h2>
     <?php echo Bootstrap::label("Foo") ?>
 </section>
 
-<section id="media">
-    <h2>Media</h2>
-    <?php echo Bootstrap::media("#", HTML::image("lol", array("class" => "media-object")), "sure!") ?>
-</section>
-
 <section id="modal">
     <h2>Modal</h2>
-    <?php echo Bootstrap::modal("Foo", "Beautiful bar") ?>
+    <?php echo Bootstrap::modal('id', "Foo", "Beautiful bar") ?>
 </section>
 
-<section id="navs">
+<section id="nav">
     <h2>Navigation</h2>
-    <?php echo Bootstrap::navs(array("Foo", "bar")) ?>
+    <?php echo Bootstrap::nav(array("Foo", "bar")) ?>
 </section>
 
 <section id="nav_list">
@@ -87,14 +87,9 @@
     <?php echo Bootstrap::progress(33) ?>
 </section>
 
-<section id="split_button">
-    <h2>Split button</h2>
-    <?php echo Bootstrap::split_button(array("Foo", "bar", "is")) ?>
-</section>
-
 <section id="well">
     <h2>Well</h2>
-    <?php echo Bootstrap::well("LOL", "small") ?>
+    <?php echo Bootstrap::well("LOL", NULL, "small") ?>
 </section>
 
 

@@ -14,11 +14,11 @@ defined('SYSPATH') or die('No direct access allowed.');
 class Bootstrap_Test extends Unittest_TestCase {
 
     public function test_alert() {
-        Bootstrap::alert("test", "", array());
+        Bootstrap::alert("test");
     }
 
     public function test_badge() {
-        Bootstrap::badge("test", "", array());
+        Bootstrap::badge("test");
     }
 
     public function test_breadcrumb() {
@@ -45,24 +45,16 @@ class Bootstrap_Test extends Unittest_TestCase {
         Bootstrap::dropdown(array());
     }
 
-    public function test_list_item() {
-        Bootstrap::list_item("test", "", array());
-    }
-
     public function test_label() {
-        Bootstrap::label("test", "", array());
-    }
-
-    public function test_media() {
-        Bootstrap::media("test", "to", "cool stuff");
+        Bootstrap::label("test");
     }
 
     public function test_modal() {
-        Bootstrap::modal("Bar", "Foo");
+        Bootstrap::modal('id', "title", "description");
     }
 
-    public function test_navs() {
-        Bootstrap::navs(array("test"), "", array());
+    public function test_nav() {
+        Bootstrap::nav(array("test"), "", array());
     }
 
     public function test_nav_list() {
@@ -85,12 +77,12 @@ class Bootstrap_Test extends Unittest_TestCase {
         Bootstrap::progress("test", "", array());
     }
 
-    public function test_split_button() {
-        Bootstrap::split_button(array());
-    }
-    
     public function test_well() {
-        Bootstrap::well("Foo", "small");
+        Bootstrap::well('Foo');
+    }
+
+    public function test_view() {
+        View::factory('bootstrap/tests')->render();
     }
 
 }
