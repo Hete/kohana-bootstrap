@@ -42,7 +42,15 @@ class Kohana_Bootstrap {
         $attributes[$name] = Arr::get($attributes, $name, "") . " " . $value;
     }
 
-    public static function base($tag, $body, $variables = NULL, array $attributes = NULL) {
+    /**
+     * 
+     * @param string $tag
+     * @param string $body
+     * @param array $variables
+     * @param array $attributes
+     * @return string
+     */
+    public static function base($tag, $body, array $variables = NULL, array $attributes = NULL) {
         return "<$tag" . HTML::attributes($attributes) . '>' . __($body, $variables) . "</$tag>";
     }
 
@@ -59,9 +67,9 @@ class Kohana_Bootstrap {
      */
     public static function alert($message, array $variables = NULL, $type = 'info', array $attributes = NULL) {
 
-        static::add_attribute($attributes, "alert alert-$type");
+        Bootstrap::add_attribute($attributes, "alert alert-$type");
 
-        return static::base('div', $message, $variables, $attributes);
+        return Bootstrap::base('div', $message, $variables, $attributes);
     }
 
     /**
@@ -76,9 +84,9 @@ class Kohana_Bootstrap {
      */
     public static function badge($message, array $variables = NULL, $type = 'info', $attributes = NULL) {
 
-        static::add_attribute($attributes, "badge badge-$type");
+        Bootstrap::add_attribute($attributes, "badge badge-$type");
 
-        return static::base('span', $message, $variables, $attributes);
+        return Bootstrap::base('span', $message, $variables, $attributes);
     }
 
     /**
@@ -86,30 +94,45 @@ class Kohana_Bootstrap {
      * 
      * @see http://twitter.github.com/bootstrap/components.html#breadcrumbs
      * 
-     * @param array $links where keys are urls and values are texts to show.
-     * @param string $divider is the divider used to split the $links elements.
+     * @param array $elements
+     * @param variant $actives
+     * @param array $variables
+     * @param string $divider
+     * @param array $attributes
      * @return string
      */
-    public static function breadcrumb(array $elements, $divider = '/', array $attributes = NULL) {
+    public static function breadcrumb(array $elements, $actives = NULL, array $variables = NULL, $divider = '/', array $attributes = NULL) {
 
-        static::add_attribute($attributes, "breadcrumb");
+        if ($actives === NULL) {
+            $actives = array();
+        }
 
-        $output = "<ul " . HTML::attributes($attributes) . ">";
+        if (!Arr::is_array($actives)) {
+            $actives = array($actives);
+        }
+
+        Bootstrap::add_attribute($attributes, 'breadcrumb');
+
+        $output = '<ul' . HTML::attributes($attributes) . '>';
 
         $count = 0;
 
-        foreach ($elements as $value) {
+        foreach ($elements as $key => $element) {
+
             $count++;
-
-            $output .= '<li>';
-
-            $output .= $value;
 
             // Check if we add a divider
             if ($count < count($elements)) {
-                $output .= "<span class='divider'>$divider</span>";
+                $element .= Bootstrap::base('span', $divider, $variables, array('class' => 'divider'));
             }
-            $output .= '</li>';
+
+            $attr = array();
+
+            if (in_array($key, $actives)) {
+                Bootstrap::add_attribute($attr, 'active');
+            }
+
+            $output .= Bootstrap::base('li', $element, $variables);
         }
 
         $output .= '</ul>';
@@ -130,22 +153,22 @@ class Kohana_Bootstrap {
      * @param array $attributes 
      * @return string
      */
-    public static function button($text, $name = NULL, $value = NULL, $type = '', array $attributes = NULL) {
+    public static function button($text, $name = NULL, $value = NULL, $type = '', array $variables = NULL, array $attributes = NULL) {
 
-        static::add_attribute($attributes, "btn btn-$type");
+        Bootstrap::add_attribute($attributes, "btn btn-$type");
 
-        $attributes["name"] = $name;
-        $attributes["value"] = $value;
+        $attributes['name'] = $name;
+        $attributes['value'] = $value;
 
-        $tag = "button";
+        $tag = 'button';
 
         if ($name === NULL && is_string($value)) {
             // It's a link button
-            $tag = "a";
-            $attributes["href"] = URL::site($value);
+            $tag = 'a';
+            $attributes['href'] = URL::site($value);
         }
 
-        return static::base($tag, $text, NULL, $attributes);
+        return Bootstrap::base($tag, $text, $variables, $attributes);
     }
 
     /**
@@ -159,7 +182,7 @@ class Kohana_Bootstrap {
      * @param array $attributes 
      * @return View
      */
-    public static function carousel($id, array $elements, $actives = NULL, array $attributes = NULL) {
+    public static function carousel($id, array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL) {
 
         if ($actives === NULL) {
 
@@ -176,11 +199,17 @@ class Kohana_Bootstrap {
             $actives = array($actives);
         }
 
-        static::add_attribute($attributes, "carousel slide");
+        Bootstrap::add_attribute($attributes, 'carousel slide');
 
-        $attributes["id"] = $id;
+        $attributes['id'] = $id;
 
-        return View::factory("bootstrap/carousel", array("elements" => $elements, "actives" => $actives, "attributes" => $attributes));
+        $parameters = array();
+        $parameters['elements'] = $elements;
+        $parameters['actives'] = $actives;
+        $parameters['variables'] = $variables;
+        $parameters['attributes'] = $attributes;
+
+        return View::factory('bootstrap/carousel', $parameters);
     }
 
     /**
@@ -194,12 +223,12 @@ class Kohana_Bootstrap {
      */
     public static function close(array $attributes = NULL) {
 
-        static::add_attribute($attributes, "close");
+        Bootstrap::add_attribute($attributes, 'close');
 
         // Fix for iPhone
         $attributes['href'] = Arr::get($attributes, 'href', '#');
 
-        return static::button('&times;', NULL, NULL, '', $attributes);
+        return Bootstrap::button('&times;', NULL, NULL, '', $attributes);
     }
 
     /**
@@ -219,7 +248,7 @@ class Kohana_Bootstrap {
      * @param array $attributes attributes for the dropdown.
      * @return string
      */
-    public static function dropdown(array $elements, $actives = NULL, array $attributes = NULL) {
+    public static function dropdown(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL) {
 
         if ($actives === NULL) {
             $actives = array();
@@ -229,26 +258,28 @@ class Kohana_Bootstrap {
             $actives = array($actives);
         }
 
-        static::add_attribute($attributes, "dropdown-menu");
+        Bootstrap::add_attribute($attributes, "dropdown-menu");
 
-        $output = "";
-
-        $output = "<ul " . HTML::attributes($attributes) . ">";
-
+        $output = '<ul' . HTML::attributes($attributes) . '>';
 
         foreach ($elements as $key => $element) {
-            $atts = array("class" => (in_array($key, $actives) ? "active" : ""));
+
+            $atts = array();
+
+            if (in_array($key, $actives)) {
+                Bootstrap::add_attribute($atts, 'active');
+            }
 
             if (Arr::is_array($element)) {
                 // Creating submenu
-                static::add_attribute($atts, "dropdown-submenu");
-                $output .= "<li " . HTML::attributes($atts) . ">" . $key . static::dropdown($element, NULL, $attributes, TRUE) . "</li>";
+                Bootstrap::add_attribute($atts, 'dropdown-submenu');
+                $output .= '<li' . HTML::attributes($atts) . '>' . $key . Bootstrap::dropdown($element, $actives, $variables, $attributes) . '</li>';
             } else {
-                $output .= "<li " . HTML::attributes($atts) . ">$element</li>";
+                $output .= Bootstrap::base('li', $element, $variables, $atts);
             }
         }
 
-        $output .= "</ul>";
+        $output .= '</ul>';
 
         return $output;
     }
@@ -264,18 +295,19 @@ class Kohana_Bootstrap {
      * @param array $attributes custom attributes for the button group.
      * @return string rendered HTML Code to create the button
      */
-    public static function dropdown_button($title, array $elements, $actives = NULL, $type = "", array $attributes = NULL, array $button_attributes = NULL, array $dropdown_attributes = NULL) {
+    public static function dropdown_button($title, array $elements, $actives = NULL, array $variables = NULL, $type = '', array $attributes = NULL, array $button_attributes = NULL, array $dropdown_attributes = NULL) {
 
-        static::add_attribute($attributes, "btn-group");
+        Bootstrap::add_attribute($attributes, 'btn-group');
+
+        Bootstrap::add_attribute($button_attributes, 'dropdown-toggle');
+
+        $button_attributes['data-toggle'] = 'dropdown';
 
         $output = '<div' . HTML::attributes($attributes) . '>';
 
-        static::add_attribute($button_attributes, 'dropdown-toggle');
-        $button_attributes['data-toggle'] = 'dropdown';
+        $output .= Bootstrap::button($title . ' ' . Bootstrap::CARET, NULL, NULL, $type, $variables, $button_attributes);
 
-        $output .= static::button($title . ' ' . static::CARET, NULL, NULL, $type, $button_attributes);
-
-        $output .= static::dropdown($elements, $actives, $dropdown_attributes);
+        $output .= Bootstrap::dropdown($elements, $actives, $variables, $dropdown_attributes);
 
         $output .= '</div>';
 
@@ -293,9 +325,9 @@ class Kohana_Bootstrap {
      */
     public static function icon($name, array $attributes = NULL) {
 
-        static::add_attribute($attributes, "icon-$name");
+        Bootstrap::add_attribute($attributes, "icon-$name");
 
-        return static::base('i', NULL, NULL, $attributes);
+        return Bootstrap::base('i', NULL, NULL, $attributes);
     }
 
     /**
@@ -303,16 +335,17 @@ class Kohana_Bootstrap {
      * 
      * @see 
      * 
-     * @param type $message
-     * @param type $type
+     * @param string $message
+     * @param array $variables
+     * @param string $type
      * @param array $attributes
-     * @return type
+     * @return string
      */
     public static function label($message, array $variables = NULL, $type = 'info', array $attributes = NULL) {
 
-        static::add_attribute($attributes, "label label-$type");
+        Bootstrap::add_attribute($attributes, "label label-$type");
 
-        return static::base('span', $message, $attributes, $attributes);
+        return Bootstrap::base('span', $message, $variables, $attributes);
     }
 
     /**
@@ -330,20 +363,20 @@ class Kohana_Bootstrap {
      * @param array $parameters are the parameters passed to the view.
      * @return View
      */
-    public static function modal($id, $title, $description, $action = NULL, $save = NULL, $close = NULL, array $attributes = NULL, array $parameters = NULL) {
+    public static function modal($id, $title, $description, $action = NULL, $save = NULL, $close = NULL, array $variables = NULL, array $attributes = NULL, array $parameters = NULL) {
 
-        static::add_attribute($attributes, "modal hide fade");
+        Bootstrap::add_attribute($attributes, 'modal hide fade');
 
-        $attributes["id"] = "$id";
+        $attributes['id'] = $id;
+        $parameters['title'] = $title;
+        $parameters['description'] = $description;
+        $parameters['action'] = $action;
+        $parameters['save'] = $save;
+        $parameters['close'] = $close;
+        $parameters['variables'] = $variables;
+        $parameters['attributes'] = $attributes;
 
-        $parameters["title"] = $title;
-        $parameters["description"] = $description;
-        $parameters["action"] = $action;
-        $parameters["save"] = $save;
-        $parameters["close"] = $close;
-        $parameters["attributes"] = $attributes;
-
-        return View::factory("bootstrap/modal", $parameters);
+        return View::factory('bootstrap/modal', $parameters);
     }
 
     /**
@@ -359,7 +392,7 @@ class Kohana_Bootstrap {
      */
     public static function nav(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL, array $sub_attributes = NULL, array $li_attributes = NULL) {
 
-        static::add_attribute($attributes, 'nav');
+        Bootstrap::add_attribute($attributes, 'nav');
 
         if ($actives === NULL) {
             $actives = array();
@@ -376,15 +409,15 @@ class Kohana_Bootstrap {
             $_li_attributes = $li_attributes;
 
             if (in_array($key, $actives)) {
-                static::add_attribute($_li_attributes, 'active');
+                Bootstrap::add_attribute($_li_attributes, 'active');
             }
 
             if (Arr::is_array($element)) {
                 $output .= '<li' . HTML::attributes($_li_attributes) . '>';
-                $output .= static::nav($element, $actives, $variables, $sub_attributes);
+                $output .= Bootstrap::nav($element, $actives, $variables, $sub_attributes);
                 $output .= '</li>';
             } else {
-                $output .= static::base('li', $element, $variables, $_li_attributes);
+                $output .= Bootstrap::base('li', $element, $variables, $_li_attributes);
             }
         }
 
@@ -406,13 +439,13 @@ class Kohana_Bootstrap {
      */
     public static function navbar(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL, array $nav_attributes = NULL) {
 
-        static::add_attribute($attributes, "navbar");
+        Bootstrap::add_attribute($attributes, "navbar");
 
         $output = '<div' . HTML::attributes($attributes) . '>';
 
         $output .= '<div' . HTML::attributes(array('class' => 'navbar-inner')) . '>';
 
-        $output .= static::navs($elements, $actives, $variables, $nav_attributes);
+        $output .= Bootstrap::nav($elements, $actives, $variables, $nav_attributes);
 
         $output .= '</div>';
 
@@ -433,9 +466,9 @@ class Kohana_Bootstrap {
      */
     public static function nav_list(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL) {
 
-        static::add_attribute($attributes, "nav-list");
+        Bootstrap::add_attribute($attributes, "nav-list");
 
-        return static::nav($elements, $actives, $variables, $attributes);
+        return Bootstrap::nav($elements, $actives, $variables, $attributes);
     }
 
     /**
@@ -450,12 +483,12 @@ class Kohana_Bootstrap {
      */
     public static function nav_pills(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL, array $sub_attributes = NULL, array $li_attributes = NULL) {
 
-        static::add_attribute($attributes, "nav-pills");
+        Bootstrap::add_attribute($attributes, "nav-pills");
 
         // Subnavs are stacked
-        static::add_attribute($sub_attributes, 'nav-pills nav-stacked');
+        Bootstrap::add_attribute($sub_attributes, 'nav-pills nav-stacked');
 
-        return static::nav($elements, $actives, $variables, $attributes, $sub_attributes, $li_attributes);
+        return Bootstrap::nav($elements, $actives, $variables, $attributes, $sub_attributes, $li_attributes);
     }
 
     /**
@@ -470,9 +503,9 @@ class Kohana_Bootstrap {
      */
     public static function nav_tabs(array $elements, $actives = NULL, array $variables = NULL, array $attributes = NULL) {
 
-        static::add_attribute($attributes, 'nav-tabs');
+        Bootstrap::add_attribute($attributes, 'nav-tabs');
 
-        return static::nav($elements, $actives, $variables, $attributes);
+        return Bootstrap::nav($elements, $actives, $variables, $attributes);
     }
 
     /**
@@ -495,7 +528,7 @@ class Kohana_Bootstrap {
             $actives = array($actives);
         }
 
-        static::add_attribute($attributes, 'pagination');
+        Bootstrap::add_attribute($attributes, 'pagination');
 
         $output = '<div' . HTML::attributes($attributes) . '><ul>';
 
@@ -504,10 +537,10 @@ class Kohana_Bootstrap {
             $li_attributes = array();
 
             if (in_array($key, $actives)) {
-                static::add_attribute($li_attributes, 'active');
+                Bootstrap::add_attribute($li_attributes, 'active');
             }
 
-            $output .= static::base('li', $value, $variables, $li_attributes);
+            $output .= Bootstrap::base('li', $value, $variables, $li_attributes);
         }
 
         $output .= '</ul></div>';
@@ -527,11 +560,11 @@ class Kohana_Bootstrap {
      */
     public static function progress($progress, $type = 'info', array $attributes = NULL) {
 
-        static::add_attribute($attributes, "progress progress-$type");
+        Bootstrap::add_attribute($attributes, "progress progress-$type");
 
         $output = '<div' . HTML::attributes($attributes) . '>';
 
-        $atts = array("class" => "bar");
+        $atts = array('class' => 'bar');
 
         // Support for multiple progress bars
         if (Arr::is_array($progress)) {
@@ -544,7 +577,7 @@ class Kohana_Bootstrap {
             $output .= '<div' . HTML::attributes($atts) . '/>';
         }
 
-        $output .= "</div>";
+        $output .= '</div>';
 
         return $output;
     }
@@ -562,10 +595,10 @@ class Kohana_Bootstrap {
      */
     public static function well($message, array $variables = NULL, $size = '', array $attributes = NULL) {
 
-        static::add_attribute($attributes, "well");
-        static::add_attribute($attributes, "well-$size");
+        Bootstrap::add_attribute($attributes, 'well');
+        Bootstrap::add_attribute($attributes, "well-$size");
 
-        return static::base('div', $message, $variables, $attributes);
+        return Bootstrap::base('div', $message, $variables, $attributes);
     }
 
 }

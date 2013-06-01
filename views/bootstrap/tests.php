@@ -2,6 +2,8 @@
 
 <h1>Tests for Kohana Bootstrap module</h1>
 
+<?php echo Bootstrap::navbar(array(HTML::anchor("foo"))) ?>
+
 <section id="alert">
     <h2>Alert</h2>
     <?php echo Bootstrap::alert("Foo") ?>
@@ -32,19 +34,14 @@
     <?php echo Bootstrap::close() ?>
 </section>
 
-<section id="dropdown">
-    <h2>Dropdown</h2>
-    <?php echo Bootstrap::dropdown(array("Foo")) ?>
-</section>
-
 <section id="dropdown_button">
     <h2>Dropdown button</h2>
-    <?php echo Bootstrap::dropdown_button("Foo", array("foo")) ?>
+    <?php echo Bootstrap::dropdown_button("Foo", array(HTML::anchor("foo"))) ?>
 </section>
 
 <section id="icon">
-    <h2>Label</h2>
-    <?php echo Bootstrap::icon('add') ?>
+    <h2>Icon</h2>
+    <?php echo Bootstrap::icon('minus') ?>
 </section>
 
 <section id="label">
@@ -59,27 +56,27 @@
 
 <section id="nav">
     <h2>Navigation</h2>
-    <?php echo Bootstrap::nav(array("Foo", "bar")) ?>
+    <?php echo Bootstrap::nav(array(HTML::anchor('foo'), HTML::anchor('bar'))) ?>
 </section>
 
 <section id="nav_list">
     <h2>Navigation list</h2>
-    <?php echo Bootstrap::nav_list(array("#nav_list" => "Foo", "#nav_list" => "bar")) ?>
+    <?php echo Bootstrap::nav_list(array(HTML::anchor('foo'), HTML::anchor('bar'))) ?>
 </section>
 
 <section id="nav_pills">
     <h2>Navigation pills</h2>
-    <?php echo Bootstrap::nav_pills(array("Foo", "bar")) ?>
+    <?php echo Bootstrap::nav_pills(array(HTML::anchor('foo'), HTML::anchor('bar'))) ?>
 </section>
 
 <section id="nav_tabs">
     <h2>Navigation tabs</h2>
-    <?php echo Bootstrap::nav_tabs(array("Foo", "bar")) ?>
+    <?php echo Bootstrap::nav_tabs(array(HTML::anchor('foo'), HTML::anchor('bar'))) ?>
 </section>
 
 <section id="pagination">
     <h2>Pagination</h2>
-    <?php echo Bootstrap::pagination(array("Foo", "bar")) ?>
+    <?php echo Bootstrap::pagination(array(HTML::anchor('1'), HTML::anchor('2'))) ?>
 </section>
 
 <section id="progress">
