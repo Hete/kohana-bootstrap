@@ -621,8 +621,17 @@ class Kohana_Bootstrap {
 
         $output .= array_shift($elements);
 
+		if ( ! isset($button_attributes['class']))
+		{
+			$button_attributes['class'] = '';
+		}
+
+		$button_attributes['class'] .= ' dropdown-toggle';
+
+		$button_attributes = Arr::merge(array('data-toggle' => 'dropdown'), $button_attributes);
+
         // Dropdown button in this case has no title, just a caret
-        $output .= static::button(static::CARET, NULL, NULL, $type, array("class" => "dropdown-toggle", "data-toggle" => "dropdown"));
+        $output .= static::button(static::CARET, NULL, NULL, $type, $button_attributes);
 
         $output .= static::dropdown($elements, NULL, $dropdown_attributes);
 
